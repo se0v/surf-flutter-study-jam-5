@@ -8,11 +8,18 @@ class MemeGeneratorScreen extends StatefulWidget {
 }
 
 class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
+  late TextEditingController linkController;
+  var linkMeme =
+      'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
+  var textMeme = 'Здесь мог бы быть ваш мем';
+  @override
+  void initState() {
+    super.initState();
+    linkController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var linkMeme =
-        'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
-    var textMeme = 'Здесь мог бы быть ваш мем';
     final decoration = BoxDecoration(
       border: Border.all(
         color: Colors.white,
@@ -72,7 +79,9 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
               Positioned(
                 bottom: 100,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _showDialog();
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
@@ -93,6 +102,56 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
               ),
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Введите ссылку на изображение'),
+        content: TextField(
+          controller: linkController,
+          decoration: InputDecoration(
+            hintText: 'Введите ссылку здесь',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              String newLink = linkController.text;
+              if (Uri.parse(newLink).isAbsolute) {
+                setState(() {
+                  linkMeme = newLink;
+                });
+              } else {
+                // Обработка невалидной ссылки
+                _showErrorDialog('Невалидная ссылка');
+              }
+            },
+            child: const Text('Обновить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Ошибка'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
         ],
       ),
     );
