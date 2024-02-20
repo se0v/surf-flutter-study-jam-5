@@ -167,10 +167,24 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Введите ссылку на изображение'),
-        content: TextField(
-          controller: linkController,
-          decoration: const InputDecoration(
-            hintText: 'Введите ссылку здесь',
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: linkController,
+                decoration: const InputDecoration(
+                  hintText: 'Введите ссылку здесь',
+                ),
+              ),
+              const SizedBox(height: 45),
+              const Text('Или воспользуйтесь галереей:'),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.image),
+                label: const Text('Выбрать'),
+              ),
+            ],
           ),
         ),
         actions: [
