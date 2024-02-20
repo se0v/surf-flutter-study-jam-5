@@ -74,7 +74,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
             ),
           ),
           Stack(
-            alignment: Alignment.bottomCenter, // Выравнивание внизу по центру
+            alignment: Alignment.bottomCenter,
             children: [
               Positioned(
                 bottom: 100,
@@ -92,10 +92,37 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.image,
-                          color: Colors.white), // Иконка внутри кнопки
+                      Icon(Icons.image, color: Colors.white),
                       SizedBox(width: 8),
-                      Text('Загрузить мем'),
+                      Text('Загрузить изображение'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Positioned(
+                bottom: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _changeText();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 54, 216, 244),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.text_fields, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Сменить текст'),
                     ],
                   ),
                 ),
@@ -107,14 +134,45 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
     );
   }
 
+  void _changeText() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Введите текст'),
+        content: TextField(
+          controller: linkController,
+          decoration: const InputDecoration(
+            hintText: 'Введите текст здесь',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              String newLink = linkController.text;
+              if (Uri.parse(newLink).isAbsolute) {
+                setState(() {
+                  linkMeme = newLink;
+                });
+              } else {
+                _showErrorDialog('Невалидная ссылка');
+              }
+            },
+            child: const Text('Сохранить'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Введите ссылку на изображение'),
+        title: const Text('Введите ссылку на изображение'),
         content: TextField(
           controller: linkController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Введите ссылку здесь',
           ),
         ),
@@ -128,11 +186,10 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                   linkMeme = newLink;
                 });
               } else {
-                // Обработка невалидной ссылки
                 _showErrorDialog('Невалидная ссылка');
               }
             },
-            child: const Text('Обновить'),
+            child: const Text('Сохранить'),
           ),
         ],
       ),
