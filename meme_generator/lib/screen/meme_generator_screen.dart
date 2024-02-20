@@ -15,7 +15,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
   late TextEditingController textController;
   var textMeme = 'Здесь мог бы быть ваш мем';
   var linkMeme =
-      'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
+      'https://i.cbc.ca/1.6713656.1679693029!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_780/this-is-fine.jpg';
   bool isImageFromGallery = false;
   Uint8List? imageBytes;
 
@@ -46,8 +46,8 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                 decoration: decoration,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 20,
+                    horizontal: 30,
+                    vertical: 30,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
