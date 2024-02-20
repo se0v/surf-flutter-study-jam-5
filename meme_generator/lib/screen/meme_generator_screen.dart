@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
-class MemeGeneratorScreen extends StatelessWidget {
+class MemeGeneratorScreen extends StatefulWidget {
   const MemeGeneratorScreen({Key? key}) : super(key: key);
 
   @override
+  State<MemeGeneratorScreen> createState() => _MemeGeneratorScreenState();
+}
+
+class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
+  @override
   Widget build(BuildContext context) {
+    var linkMeme =
+        'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
+    var textMeme = 'Здесь мог бы быть ваш мем';
     final decoration = BoxDecoration(
       border: Border.all(
         color: Colors.white,
@@ -12,49 +20,80 @@ class MemeGeneratorScreen extends StatelessWidget {
       ),
     );
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: ColoredBox(
-          color: Colors.black,
-          child: DecoratedBox(
-            decoration: decoration,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 50,
-                vertical: 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: double.infinity,
-                    height: 200,
-                    child: DecoratedBox(
-                      decoration: decoration,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Image.network(
-                          'https://i.cbc.ca/1.6713656.1679693029!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_780/this-is-fine.jpg',
-                          fit: BoxFit.cover,
+      backgroundColor: const Color.fromARGB(255, 82, 129, 168),
+      body: Stack(
+        children: [
+          Center(
+            child: ColoredBox(
+              color: Colors.black,
+              child: DecoratedBox(
+                decoration: decoration,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        width: double.infinity,
+                        height: 200,
+                        child: DecoratedBox(
+                          decoration: decoration,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.network(
+                              linkMeme,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      Text(
+                        textMeme,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: 'Impact',
+                          fontSize: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'Здесь мог бы быть ваш мем',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Impact',
-                      fontSize: 40,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          Stack(
+            alignment: Alignment.bottomCenter, // Выравнивание внизу по центру
+            children: [
+              Positioned(
+                bottom: 100,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 54, 216, 244),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.image,
+                          color: Colors.white), // Иконка внутри кнопки
+                      SizedBox(width: 8),
+                      Text('Загрузить мем'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
