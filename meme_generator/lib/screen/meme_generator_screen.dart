@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,11 +13,11 @@ class MemeGeneratorScreen extends StatefulWidget {
 class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
   late TextEditingController linkController;
   late TextEditingController textController;
+  var textMeme = 'Здесь мог бы быть ваш мем';
   var linkMeme =
       'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
-  var textMeme = 'Здесь мог бы быть ваш мем';
   bool isImageFromGallery = false;
-  XFile? pickedFile;
+  Uint8List? imageBytes;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
         width: 2,
       ),
     );
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 82, 129, 168),
       body: Stack(
@@ -57,10 +60,17 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                           decoration: decoration,
                           child: Padding(
                             padding: const EdgeInsets.all(4.0),
-                            child: Image.network(
-                              linkMeme,
-                              fit: BoxFit.cover,
-                            ),
+                            child: isImageFromGallery
+                                ? Image.memory(
+                                    imageBytes!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.network(
+                                    linkController.text.isNotEmpty
+                                        ? linkController.text
+                                        : linkMeme,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                         ),
                       ),
@@ -181,11 +191,11 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                   hintText: 'Введите ссылку здесь',
                 ),
               ),
-              const SizedBox(height: 45),
+              const SizedBox(height: 15),
               const Text('Или воспользуйтесь галереей:'),
               ElevatedButton.icon(
                 onPressed: () {
-                  _choiseImage();
+                  _chooseImage();
                 },
                 icon: const Icon(Icons.image),
                 label: const Text('Выбрать'),
@@ -201,28 +211,35 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
               if (Uri.parse(newLink).isAbsolute) {
                 setState(() {
                   linkMeme = newLink;
-                });
-              } else if (pickedFile != null && isImageFromGallery) {
-                setState(() {
-                  linkMeme = pickedFile!.path;
+                  isImageFromGallery = false;
                 });
               } else {
                 _showErrorDialog('Невалидная ссылка');
               }
             },
-            child: const Text('Сохранить'),
+            child: const Text('Отобразить по ссылке'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Закрыть'),
           ),
         ],
       ),
     );
   }
 
-  void _choiseImage() async {
+  void _chooseImage() async {
     XFile? pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      isImageFromGallery = true;
-      // Сохраняем pickedFile для дальнейшего использования
+      Uint8List bytes = await pickedFile.readAsBytes();
+      setState(() {
+        isImageFromGallery = true;
+        imageBytes = bytes;
+      });
     }
   }
 
