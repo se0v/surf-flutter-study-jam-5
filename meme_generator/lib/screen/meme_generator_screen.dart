@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MemeGeneratorScreen extends StatefulWidget {
   const MemeGeneratorScreen({Key? key}) : super(key: key);
@@ -93,7 +96,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
             alignment: Alignment.bottomCenter,
             children: [
               Positioned(
-                bottom: 100,
+                bottom: 80,
                 child: ElevatedButton(
                   onPressed: () {
                     _showDialog();
@@ -121,7 +124,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
             alignment: Alignment.bottomCenter,
             children: [
               Positioned(
-                bottom: 40,
+                bottom: 140,
                 child: ElevatedButton(
                   onPressed: () {
                     _changeText();
@@ -144,10 +147,53 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                 ),
               ),
             ],
-          )
+          ),
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Positioned(
+                bottom: 20,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _shareImage();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 10,
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 54, 216, 244),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.share, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Поделиться'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
+  }
+
+  void _shareImage() async {
+    if (isImageFromGallery) {
+      // If the image is from the gallery, create a temporary file and share it
+      final directory = await getTemporaryDirectory();
+      final path = "${directory.path}/shared_image.png";
+      await File(path).writeAsBytes(imageBytes!);
+
+      // ignore: deprecated_member_use
+      Share.shareFiles([path], text: 'Поделиться мемом!');
+    } else {
+      // If the image is from a URL, share the URL
+      Share.share(linkMeme, subject: 'Поделиться мемом!');
+    }
   }
 
   void _changeText() {
