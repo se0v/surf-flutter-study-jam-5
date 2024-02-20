@@ -189,10 +189,10 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
       await File(path).writeAsBytes(imageBytes!);
 
       // ignore: deprecated_member_use
-      Share.shareFiles([path], text: 'Поделиться мемом!');
+      Share.shareFiles([path], text: textMeme);
     } else {
       // If the image is from a URL, share the URL
-      Share.share(linkMeme, subject: 'Поделиться мемом!');
+      Share.share(linkMeme, subject: textMeme);
     }
   }
 
