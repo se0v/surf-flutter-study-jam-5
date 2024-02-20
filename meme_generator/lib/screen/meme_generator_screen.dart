@@ -9,6 +9,7 @@ class MemeGeneratorScreen extends StatefulWidget {
 
 class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
   late TextEditingController linkController;
+  late TextEditingController textController;
   var linkMeme =
       'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
   var textMeme = 'Здесь мог бы быть ваш мем';
@@ -16,6 +17,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
   void initState() {
     super.initState();
     linkController = TextEditingController();
+    textController = TextEditingController();
   }
 
   @override
@@ -140,7 +142,7 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Введите текст'),
         content: TextField(
-          controller: linkController,
+          controller: textController,
           decoration: const InputDecoration(
             hintText: 'Введите текст здесь',
           ),
@@ -149,14 +151,9 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              String newLink = linkController.text;
-              if (Uri.parse(newLink).isAbsolute) {
-                setState(() {
-                  linkMeme = newLink;
-                });
-              } else {
-                _showErrorDialog('Невалидная ссылка');
-              }
+              setState(() {
+                textMeme = textController.text;
+              });
             },
             child: const Text('Сохранить'),
           ),
