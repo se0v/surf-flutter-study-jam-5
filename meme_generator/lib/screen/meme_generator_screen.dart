@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MemeGeneratorScreen extends StatefulWidget {
   const MemeGeneratorScreen({Key? key}) : super(key: key);
@@ -13,6 +14,9 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
   var linkMeme =
       'https://i.ytimg.com/vi/7tMXW-EnzMk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AGkBYAC4AOKAgwIABABGGUgUSg9MA8=&rs=AOn4CLAjBQBSh9TY6qd2ZmeM2BPwJzAgbw';
   var textMeme = 'Здесь мог бы быть ваш мем';
+  bool isImageFromGallery = false;
+  XFile? pickedFile;
+
   @override
   void initState() {
     super.initState();
@@ -180,7 +184,9 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
               const SizedBox(height: 45),
               const Text('Или воспользуйтесь галереей:'),
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  _choiseImage();
+                },
                 icon: const Icon(Icons.image),
                 label: const Text('Выбрать'),
               ),
@@ -196,6 +202,10 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
                 setState(() {
                   linkMeme = newLink;
                 });
+              } else if (pickedFile != null && isImageFromGallery) {
+                setState(() {
+                  linkMeme = pickedFile!.path;
+                });
               } else {
                 _showErrorDialog('Невалидная ссылка');
               }
@@ -205,6 +215,15 @@ class _MemeGeneratorScreenState extends State<MemeGeneratorScreen> {
         ],
       ),
     );
+  }
+
+  void _choiseImage() async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      isImageFromGallery = true;
+      // Сохраняем pickedFile для дальнейшего использования
+    }
   }
 
   void _showErrorDialog(String message) {
